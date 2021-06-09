@@ -1,6 +1,6 @@
 # pollen-onboarding
 
-A script to add, merge and activate new users in the ledger every 6 hours
+A script to add, merge and activate new users in the Pollen instance.
 
 ## Developer setup
 
@@ -12,7 +12,6 @@ A script to add, merge and activate new users in the ledger every 6 hours
 
 Copy the content of your `.env.sample` file into a new `.env` file and add the corresponding variables:
 
-- `REPO_AND_BRANCH` = The repo and branch of your sourcecred instance. In this case it's `https://raw.githubusercontent.com/1Hive/pollen/gh-pages/`
 - `MONGODB_URI` = Your MongoDB connection URI.
 - `GITHUB_API_TOKEN` = GitHub token with commit permissions to the repo.
 - `REPO` = The repo you want to commit to.
@@ -20,5 +19,5 @@ Copy the content of your `.env.sample` file into a new `.env` file and add the c
 
 ### Run the script!
 
-- `npm run dev` will execute the script in developer mode, with hot reloading.
 - `npm start` will execute the script in production mode.
+- `npm run dev` will execute the script in developer mode, with hot reloading.
