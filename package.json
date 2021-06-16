@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/mongoose": "^5.10.5",
     "@types/node": "^14.14.41",
+    "chalk": "^4.1.1",
     "dotenv": "^9.0.0",
     "mongodb": "^3.6.6",
     "mongoose": "^5.12.7",
