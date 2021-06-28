@@ -30,9 +30,10 @@ const main = async (): Promise<void> => {
   
   for (const user of modifiedUsers) {
     // Start of Ledger modifications logic
-    const { discordId, username, discourse, github } = user
+    const { discordId, username, discourse, github, address } = user
     console.log(`\nChecking ledger entry for ${username}...`)
 
+    // Find account by Discord ID
     const discordAccount = ledger.accountByAddress(
       `N\u0000sourcecred\u0000discord\u0000MEMBER\u0000user\u0000${discordId}\u0000`
     )
@@ -47,6 +48,7 @@ const main = async (): Promise<void> => {
 
     const discordIdentityId = discordAccount.identity.id
 
+    // Merge Discourse identity if specified
     if (discourse) {
       const discourseAccount = ledger.accountByAddress(
         `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.1hive.org\u0000${discourse}\u0000`
@@ -72,6 +74,7 @@ const main = async (): Promise<void> => {
       }
     }
 
+    // Merge GitHub identity if specified
     if (github) {
       const githubAccount = ledger.accountByAddress(
         `N\u0000sourcecred\u0000github\u0000USERLIKE\u0000USER\u0000${github}\u0000`
@@ -96,7 +99,21 @@ const main = async (): Promise<void> => {
         }
       }
     }
+
+    // Add wallet address
+    if (
+      !discordAccount.payoutAddresses.size || 
+      discordAccount.payoutAddresses.values().next().value !== address
+    ) {
+      ledger.setPayoutAddress(
+        discordAccount.identity.id,
+        address,
+        '100',
+        '0x71850b7E9Ee3f13Ab46d67167341E4bDc905Eef9'
+      )
+    }
   
+    // Activate account
     if (!discordAccount.active) {
       try {
         ledger.activate(discordIdentityId)
