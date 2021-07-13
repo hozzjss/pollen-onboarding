@@ -30,7 +30,8 @@ const main = async (): Promise<void> => {
   
   for (const user of modifiedUsers) {
     // Start of Ledger modifications logic
-    const { discordId, username, discourse, github, address } = user
+    const { discordId, username, address } = user
+    let { discourse, github } = user
     console.log(`\nChecking ledger entry for ${username}...`)
 
     // Find account by Discord ID
@@ -47,9 +48,17 @@ const main = async (): Promise<void> => {
     }
 
     const discordIdentityId = discordAccount.identity.id
+    // Regex to test invalid characters in Discourse and GitHub usernames
+    const regex = /[._]/g
 
     // Merge Discourse identity if specified
     if (discourse) {
+      if (regex.test(discourse)) {
+        console.log(`  - ${discourse}: Invalid Discourse name for identity, replacing...`)
+        discourse = discourse.replace(regex, '-')
+        console.log(`  - New Discourse name: ${discourse}`)
+      }
+
       const discourseAccount = ledger.accountByAddress(
         `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.1hive.org\u0000${discourse}\u0000`
       )
@@ -76,6 +85,12 @@ const main = async (): Promise<void> => {
 
     // Merge GitHub identity if specified
     if (github) {
+      if (regex.test(github)) {
+        console.log(`  - ${github}: Invalid GitHub name for identity, replacing...`)
+        github = github.replace(regex, '-')
+        console.log(`  - New GitHub name: ${github}`)
+      }
+      
       const githubAccount = ledger.accountByAddress(
         `N\u0000sourcecred\u0000github\u0000USERLIKE\u0000USER\u0000${github}\u0000`
       )
@@ -130,12 +145,16 @@ const main = async (): Promise<void> => {
   
   const persistRes = await manager.persist()
   
-  if(persistRes.error) console.log(
-    chalk.red(`\nAn error occurred when trying to commit the new ledger: ${persistRes.error}`)
-  )
+  if(persistRes.error) {
+    console.log(
+      chalk.red(`\nAn error occurred when trying to commit the new ledger: ${persistRes.error}`)
+    )
+    process.exit(1)
+  }
   else {
     await LedgerUpdate.create({ modifiedAt: runStartTime })
     console.log(chalk.green('\nAccounts successfully modified'))
+    process.exit()
   }
 }
 
