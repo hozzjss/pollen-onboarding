@@ -1,72 +1,67 @@
-import { sourcecred } from 'sourcecred'
-import { config } from 'dotenv'
+import { sourcecred } from "sourcecred";
+import { config } from "dotenv";
 
-import User, { IUser } from './models/User'
-import LedgerUpdate from './models/LedgerUpdate'
+import User, { IUser } from "./models/User";
+import LedgerUpdate from "./models/LedgerUpdate";
 
-config()
+config();
 
-export const log = (message) => console.log(`${Date.now()}: ${message}`)
+export const log = (message) => console.log(`${Date.now()}: ${message}`);
 
 const fetchLastLedgerUpdate = async (): Promise<number> => {
-  const lastLedgerUpdateEntry = await LedgerUpdate.find({}).sort('-modifiedAt').limit(1)
-  
-  return lastLedgerUpdateEntry.length ? lastLedgerUpdateEntry[0].modifiedAt : 0
-}
+  const lastLedgerUpdateEntry = await LedgerUpdate.find({})
+    .sort("-modifiedAt")
+    .limit(1);
+
+  return lastLedgerUpdateEntry.length ? lastLedgerUpdateEntry[0].modifiedAt : 0;
+};
 
 export const fetchModifiedUsers = async (): Promise<IUser[]> => {
-  const lastLedgerUpdate = await fetchLastLedgerUpdate()
+  const lastLedgerUpdate = await fetchLastLedgerUpdate();
   const foundUsers = await User.find({
-     modifiedAt: { $gte: lastLedgerUpdate }
-  })
+    modifiedAt: { $gte: lastLedgerUpdate },
+  });
 
-  return foundUsers
-}
+  return foundUsers;
+};
 
 const storage = new sourcecred.ledger.storage.GithubStorage({
-  apiToken: process.env.GITHUB_API_TOKEN,
+  apiToken: process.env.GH_API_TOKEN,
   repo: process.env.REPO,
-  branch: process.env.BRANCH
-})
+  branch: process.env.BRANCH,
+});
 
-export const manager = new sourcecred.ledger.manager.LedgerManager({ storage })
+export const manager = new sourcecred.ledger.manager.LedgerManager({ storage });
 
 export const loadLedger = async () => {
-  const ledger = await manager.reloadLedger()
-
-  return ledger
-}
+  const ledger = await manager.reloadLedger();
+  return ledger;
+};
 
 export const createDiscourseIdentity = (discourse, ledger) => {
   const newDiscourseIdentityId = ledger.createIdentity(
-    'USER',
+    "USER",
     ledger.nameAvailable(discourse) ? discourse : `${discourse}-discourse`
-  )
+  );
 
-  ledger.addAlias(
-    newDiscourseIdentityId,
-    {
-      description: `discourse/[@${discourse}](https://forum.1hive.org/u/${discourse}/)`,
-      address: `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.1hive.org\u0000${discourse}\u0000`
-    }
-  )
+  ledger.addAlias(newDiscourseIdentityId, {
+    description: `discourse/[@${discourse}](https://forum.1hive.org/u/${discourse}/)`,
+    address: `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.1hive.org\u0000${discourse}\u0000`,
+  });
 
-  return newDiscourseIdentityId
-}
+  return newDiscourseIdentityId;
+};
 
 export const createGithubIdentity = (github, ledger) => {
   const newGithubIdentityId = ledger.createIdentity(
-    'USER',
+    "USER",
     ledger.nameAvailable(github) ? github : `${github}-github`
-  )
+  );
 
-  ledger.addAlias(
-    newGithubIdentityId,
-    {
-      description: `github/[@${github}](https://github.com/${github})`,
-      address: `N\u0000sourcecred\u0000github\u0000USERLIKE\u0000USER\u0000${github}\u0000`
-    }
-  )
+  ledger.addAlias(newGithubIdentityId, {
+    description: `github/[@${github}](https://github.com/${github})`,
+    address: `N\u0000sourcecred\u0000github\u0000USERLIKE\u0000USER\u0000${github}\u0000`,
+  });
 
-  return newGithubIdentityId
-}
+  return newGithubIdentityId;
+};
