@@ -150,8 +150,8 @@ const main = async (): Promise<void> => {
       ledger.setPayoutAddress(
         discordAccount.identity.id,
         address,
-        "100",
-        "0x71850b7E9Ee3f13Ab46d67167341E4bDc905Eef9"
+        "137",
+        "0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3"
       );
     }
 
