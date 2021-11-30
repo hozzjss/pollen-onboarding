@@ -151,7 +151,7 @@ const main = async (): Promise<void> => {
         discordAccount.identity.id,
         address,
         "137",
-        "0x9a71012b13ca4d3d0cdc72a177df3ef03b0e76a3"
+        "0x0000000000000000000000000000000000000000"
       );
     }
 
