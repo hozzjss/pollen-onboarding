@@ -25,7 +25,7 @@ export const fetchModifiedUsers = async (): Promise<IUser[]> => {
   return foundUsers;
 };
 
-const storage = new sourcecred.ledger.storage.GithubStorage({
+const storage = new sourcecred.ledger.storage.WritableGithubStorage({
   apiToken: process.env.GH_API_TOKEN,
   repo: process.env.REPO,
   branch: process.env.BRANCH,
