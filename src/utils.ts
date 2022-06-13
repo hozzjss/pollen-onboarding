@@ -45,8 +45,8 @@ export const createDiscourseIdentity = (discourse, ledger) => {
   );
 
   ledger.addAlias(newDiscourseIdentityId, {
-    description: `discourse/[@${discourse}](https://forum.1hive.org/u/${discourse}/)`,
-    address: `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.1hive.org\u0000${discourse}\u0000`,
+    description: `discourse/[@${discourse}](https://forum.tecommons.org/u/${discourse}/)`,
+    address: `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.tecommons.org\u0000${discourse}\u0000`,
   });
 
   return newDiscourseIdentityId;

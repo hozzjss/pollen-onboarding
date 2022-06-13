@@ -67,7 +67,7 @@ const main = async (): Promise<void> => {
       }
 
       const discourseAccount = ledger.accountByAddress(
-        `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.1hive.org\u0000${discourse}\u0000`
+        `N\u0000sourcecred\u0000discourse\u0000user\u0000https://forum.tecommons.org\u0000${discourse}\u0000`
       );
 
       let discourseIdentityId;
